@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  watcher:
+    build:
+      context: ./custom
+    network_mode: host
+    entrypoint: "tcpdump -i any"
+
+  first:
+    build:
+      context: ./custom
+    networks:
+      default:
+        ipv4_address: 172.25.0.11
+    entrypoint: "sleep infinity"
+
+  second:
+    build:
+      context: ./custom
+    networks:
+      default:
+        ipv4_address: 172.25.0.22
+    entrypoint: "ping first"
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.25.0.0/16"
+
